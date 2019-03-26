@@ -24,7 +24,7 @@ class Cahn():
         self.norm = self.M*self.dt/(self.dx**2)
         print(self.norm)
         #phi = np.ones((self.N,self.N))*0.5+np.random.rand(self.N,self.N)-np.random.rand(self.N,self.N)
-        phi = np.zeros((self.N,self.N))+np.random.rand(self.N,self.N)-np.random.rand(self.N,self.N)
+        phi = np.zeros((self.N,self.N))+np.random.rand(self.N,self.N)/100-np.random.rand(self.N,self.N)/100
         #phi = np.random.choice(a=[-0.5,0.5], size=(N, N), p=[p, 1-p])
         self.phi = Periodic_Lattice(phi)
         self.F = []
