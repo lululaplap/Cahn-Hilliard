@@ -40,7 +40,7 @@ class Cahn():
         l = signal.convolve2d(phi_old,self.laplace, mode="same",boundary = "wrap")
         a = -self.a*phi_old
         b =  self.a*(np.power(phi_old,3))
-        c =  -self.k*self.norm*l
+        c =  -self.k*l
         t = a+b+c
         return t
     def getPhi(self):
@@ -50,17 +50,18 @@ class Cahn():
         return phi
 
     def getf(self):
-        g = signal.convolve2d(self.phi,self.grad, mode="same",boundary = "wrap")
+        #g = signal.convolve2d(self.phi,self.grad, mode="same",boundary = "wrap")
+        g = filter.sobel(self.phi,mode='wrap')
+        #xg,yg = np.gradient(self.phi)
+        #g = np.sqrt(np.power(xg,2)+np.power(yg,2))
         return -1*((self.a/2)*np.power(self.phi,2)) + self.a/4*np.power(self.phi,4) + (self.k/2 * self.norm* (np.power(g,2)))
     def update(self,i):
-
-
         for i in range(1000):
             self.phi = self.getPhi()
             self.F.append(np.sum(self.getf()))
 
         ax1.clear()
-        ax1.imshow(self.phi, interpolation='sinc', cmap = 'cool', vmin=-1, vmax=1, origin='lower')
+        ax1.imshow(self.phi, interpolation='nearest', cmap = 'cool', vmin=-1, vmax=1, origin='lower')
         plt.title(i)
         #ax2.clear()
         #ax2.plot(self.F)
@@ -69,7 +70,7 @@ class Cahn():
         #return self.phi
 
 def main():
-    C = Cahn(50)
+    C = Cahn(100)
     ani = animation.FuncAnimation(fig, C.update)
     plt.show()
     plt.plot(C.F)
